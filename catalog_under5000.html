@@ -390,7 +390,7 @@ nav {
 </div>
 <script>
 (function() {
-  var memberName = new URLSearchParams(window.location.search).get('member') || '未設定';
+  var memberName = new URLSearchParams(window.location.search).get('member') || 'Ca2puls';
 
   // バナーにメンバー名表示
   window.addEventListener('DOMContentLoaded', function() {
@@ -399,7 +399,7 @@ nav {
 
     // キャンセルボタン
     document.getElementById('modal-no').addEventListener('click', closeModal);
-    document.getElementById('modal-cancel').addEventListener('click', closeModal);
+    var mc = document.getElementById('modal-cancel'); if (mc && mc.tagName === 'BUTTON') mc.addEventListener('click', closeModal);
 
     // 「この商品にする」ボタン全部にイベント付与
     document.querySelectorAll('.btn-gift-enable').forEach(function(btn) {
