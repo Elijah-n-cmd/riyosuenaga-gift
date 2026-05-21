@@ -15,6 +15,9 @@
 <script src="./jquery.colorbox.1.6.1.min.js" type="text/javascript"></script>
 <style>
 /* ===== カタログ装飾 ===== */
+* { user-select: none; }
+input, textarea { user-select: text; }
+
 .cancel-btn-styled {
   background: white;
   border: 2px solid #e0c0e8;
@@ -99,7 +102,7 @@ body {
 }
 
 /* 商品カード */
-dl.eachproduct {
+dl.eachproduct { user-select: none !important;
   background: white !important;
   border-radius: 18px !important;
   box-shadow: 0 4px 18px rgba(180,100,200,0.13) !important;
@@ -370,18 +373,20 @@ nav {
 <button class="confirm-btn" id="modal-yes" style="margin-bottom:8px">はい</button>
 <button class="cancel-btn-styled" id="modal-no">いいえ</button>
 </div>
-<div id="modal-step2" style="display:none">
-<h3 style="font-size:1.05rem;margin-bottom:8px">りよちゃんに通知を送りますか？</h3>
-<p style="color:#888;font-size:0.82rem;margin:0 0 4px"><span id="modal-member"></span> さんの選択内容：</p>
-<div class="product-info">
-<div class="product-name" id="modal-product-name2"></div>
-<div class="product-mile" id="modal-product-mile2"></div>
-</div>
-<button class="confirm-btn" id="modal-confirm">送信する</button>
-<div class="notify-sent" id="modal-sent" style="display:none">送信しました。りよちゃんに届きました。</div>
-<button class="cancel-btn" id="modal-cancel">キャンセル</button>
-</div>
-</div>
+<div id="modal-step2" style="display:none;position:relative;">
+      <button onclick="closeModal()" style="position:absolute;top:-8px;right:-8px;background:#e0c0e8;border:none;border-radius:50%;width:28px;height:28px;font-size:1rem;cursor:pointer;line-height:28px;text-align:center;color:#6a3fa0;">x</button>
+      <h3 style="font-size:1.05rem;margin-bottom:14px;line-height:1.5;">お届けするギフトを<br>確定しました。<br>商品の発送まで少々お待ちください。</h3>
+      <p style="font-size:0.82rem;color:#666;margin-bottom:10px;line-height:1.6;">商品の発送先の登録案内のメッセージが届きますので、案内に従って登録してください。</p>
+      <p style="font-size:0.82rem;color:#888;margin-bottom:16px;line-height:1.6;">RiyoSuenagaのライブチャットにお越しいただきありがとうございました！</p>
+      <button class="confirm-btn" onclick="closeModal()">OK</button>
+      <div id="modal-confirm" style="display:none"></div>
+      <div id="modal-sent" style="display:none"></div>
+      <div id="modal-cancel" style="display:none"></div>
+      <span id="modal-member" style="display:none"></span>
+      <span id="modal-product-name2" style="display:none"></span>
+      <span id="modal-product-mile2" style="display:none"></span>
+    </div>
+  </div>
 </div>
 <script>
 (function() {
@@ -420,7 +425,7 @@ nav {
         document.getElementById('modal-confirm').style.display = 'block';
         document.getElementById('notify-overlay').classList.add('active');
 
-        // 「はい」→即送信してStep2（確定メッセージ）へ
+                // はい→即送信してStep2（確定メッセージ）へ
         document.getElementById('modal-yes').onclick = function() {
           var formData = new FormData();
           formData.append('entry.1718602552', memberName);
