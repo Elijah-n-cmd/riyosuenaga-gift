@@ -362,13 +362,13 @@ nav {
 <div class="notify-overlay" id="notify-overlay">
 <div class="notify-modal">
 <div id="modal-step1">
-<h3 style="font-size:1.1rem;margin-bottom:10px">本当にこの商品でよろしいですか？</h3>
+<h3 style="font-size:1.1rem;margin-bottom:10px">こちらのギフトでよろしいですか？</h3>
 <div class="product-info">
 <div class="product-name" id="modal-product-name"></div>
 <div class="product-mile" id="modal-product-mile"></div>
 </div>
-<button class="confirm-btn" id="modal-yes" style="margin-bottom:8px">はい、この商品にします</button>
-<button class="cancel-btn-styled" id="modal-no">いいえ、選び直す</button>
+<button class="confirm-btn" id="modal-yes" style="margin-bottom:8px">はい</button>
+<button class="cancel-btn-styled" id="modal-no">いいえ</button>
 </div>
 <div id="modal-step2" style="display:none">
 <h3 style="font-size:1.05rem;margin-bottom:8px">りよちゃんに通知を送りますか？</h3>
@@ -390,7 +390,7 @@ nav {
   // バナーにメンバー名表示
   window.addEventListener('DOMContentLoaded', function() {
     var tag = document.getElementById('catalog-member-name');
-    if (tag) tag.textContent = memberName + ' さん';
+    if (tag) tag.textContent = memberName + ' 様';
 
     // キャンセルボタン
     document.getElementById('modal-no').addEventListener('click', closeModal);
@@ -409,7 +409,10 @@ nav {
         productName = productName.trim();
 
         // Step1表示
-        document.getElementById('modal-product-name').textContent = productName;
+        var imgEl = dl.querySelector('.thumbnail a.giftPic');
+        var bgStyle = imgEl ? imgEl.style.backgroundImage : '';
+        var imgUrl = bgStyle.replace(/url\(['"']?([^'"')]+)['"']?\)/, '$1');
+        document.getElementById('modal-product-img').src = imgUrl;
         document.getElementById('modal-product-mile').textContent = productMile + ' マイル';
         document.getElementById('modal-step1').style.display = 'block';
         document.getElementById('modal-step2').style.display = 'none';
@@ -417,27 +420,17 @@ nav {
         document.getElementById('modal-confirm').style.display = 'block';
         document.getElementById('notify-overlay').classList.add('active');
 
-        // 「はい」→Step2
+        // 「はい」→即送信してStep2（確定メッセージ）へ
         document.getElementById('modal-yes').onclick = function() {
-          document.getElementById('modal-step1').style.display = 'none';
-          document.getElementById('modal-step2').style.display = 'block';
-          document.getElementById('modal-member').textContent = memberName;
-          document.getElementById('modal-product-name2').textContent = productName;
-          document.getElementById('modal-product-mile2').textContent = productMile + ' マイル';
-        };
-
-        // 送信
-        document.getElementById('modal-confirm').onclick = function() {
           var formData = new FormData();
           formData.append('entry.1718602552', memberName);
           formData.append('entry.1729903009', productName);
           formData.append('entry.1886537318', productMile + ' マイル');
           fetch('https://docs.google.com/forms/u/0/d/e/1FAIpQLSePJDO54EiJqlH1I-mIsBhyg2MxxQ363wNb4K4nmvx10HXHaQ/formResponse', {
             method: 'POST', mode: 'no-cors', body: formData
-          }).finally(function() {
-            document.getElementById('modal-confirm').style.display = 'none';
-            document.getElementById('modal-sent').style.display = 'block';
           });
+          document.getElementById('modal-step1').style.display = 'none';
+          document.getElementById('modal-step2').style.display = 'block';
         };
       });
     });
